@@ -54,8 +54,21 @@ public class TodoListController {
         }
     }
 
-    @GetMapping("/getByTitle/{title}")
-    public TodoList findByTitle(@PathVariable String title) {
-        return todoListService.findByTitle(title);
+    @GetMapping("/searchByTitle")
+    public ResponseEntity<?> searchByTitle(@RequestParam String title) {
+        try {
+            List<TodoList> todoLists = todoListService.getTodoListByTitle(title);
+            if (todoLists.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Nenhuma lista de tarefas encontrada com o título: " + title);
+            }
+
+            return ResponseEntity.ok(todoLists);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro ao processar a solicitação: " + e.getMessage());
+        }
     }
+
 }
