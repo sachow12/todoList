@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -46,8 +47,19 @@ public class TodoListController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTodoList(@PathVariable Long id) {
         try {
-            todoListService.deleteTodoList(id);
+            todoListService.destroyTodoList(id);
             return ResponseEntity.ok("TodoList deleted successfully!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("TodoList not found with id: " + id);
+        }
+    }
+
+    @PutMapping("/desactive/{id}")
+    public ResponseEntity<String> desactiveTodoList(@PathVariable Long id) {
+        try {
+            todoListService.desactiveTodoList(id);
+            return ResponseEntity.ok("TodoList desactivated successfully!");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("TodoList not found with id: " + id);
@@ -65,6 +77,51 @@ public class TodoListController {
 
             return ResponseEntity.ok(todoLists);
 
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro ao processar a solicitação: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/searchByDate")
+    public ResponseEntity<?> searchByDate(@RequestParam LocalDate date) {
+        try {
+            List<TodoList> todoLists = todoListService.getTodoListByDate(date);
+            if (todoLists.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Nenhuma lista de tarefas encontrada com a data: " + date);
+            }
+
+            return ResponseEntity.ok(todoLists);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro ao processar a solicitação: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/searchByCodigo")
+    public ResponseEntity<?> searchByCodigo(@RequestParam Long codigo) {
+        try {
+            TodoList todoList = todoListService.getTodoListByCodigo(codigo);
+            if (todoList == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Nenhuma lista de tarefas encontrada com o código: " + codigo);
+            }
+
+            return ResponseEntity.ok(todoList);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro ao processar a solicitação: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/complete/{id}")
+    public ResponseEntity<?> completeTodoList(@PathVariable Long id) {
+        try {
+            TodoList todoList = todoListService.listCompleted(id);
+            return ResponseEntity.ok(todoList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ocorreu um erro ao processar a solicitação: " + e.getMessage());
