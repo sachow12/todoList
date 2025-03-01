@@ -9,6 +9,7 @@
 
     @NoArgsConstructor
     @AllArgsConstructor
+    @Data
     @Entity
     @Table(name = "tb_todolist")
     public class TodoList {
@@ -25,6 +26,12 @@
         @CollectionTable(name = "Todo", joinColumns = @JoinColumn(name = "id"))
         @Column(name = "Todo")
         List<String> Todo;
+        @Column(name = "status")
+        Boolean status = false;
+        @Column(name = "codigo")
+        Long codigo;
+        @Column(name = "ativacao")
+        Boolean ativacao = true;
 
         public Long getId() {
             return id;
@@ -64,5 +71,17 @@
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public Boolean getStatus() {
+            return status;
+        }
+
+        public void setStatus(Boolean status) {
+            this.status = status;
+        }
+
+        public Long getCodigo() {
+            return codigo;
         }
     }
