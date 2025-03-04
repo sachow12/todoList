@@ -13,8 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/todolist")
+@RequestMapping("/api/v1")
 public class TodoListController {
 
     @Autowired
@@ -23,17 +24,17 @@ public class TodoListController {
     @Autowired
     private TodoListRepository todoListRepository;
 
-    @GetMapping("/getAll")
+    @GetMapping("/todoList")
     public List<TodoList> readLists() {
         return todoListService.readLists();
     }
 
-    @PostMapping("/create")
+    @PostMapping("/todoList")
     public TodoList createTodoList(@RequestBody TodoList todolist) {
         return todoListService.createTodoList(todolist);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/todoList/{id}")
     public ResponseEntity<String> updateTodo(@PathVariable Long id, @RequestBody TodoList todolist) {
         try {
             todoListService.updateTodo(id, todolist);
@@ -44,7 +45,7 @@ public class TodoListController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/todoList/{id}")
     public ResponseEntity<String> deleteTodoList(@PathVariable Long id) {
         try {
             todoListService.destroyTodoList(id);
@@ -55,7 +56,7 @@ public class TodoListController {
         }
     }
 
-    @PutMapping("/desactive/{id}")
+    @PutMapping("/todoList/desactive/{id}")
     public ResponseEntity<String> desactiveTodoList(@PathVariable Long id) {
         try {
             todoListService.desactiveTodoList(id);
@@ -66,7 +67,7 @@ public class TodoListController {
         }
     }
 
-    @GetMapping("/searchByTitle")
+    @GetMapping("/todoList/searchByTitle")
     public ResponseEntity<?> searchByTitle(@RequestParam String title) {
         try {
             List<TodoList> todoLists = todoListService.getTodoListByTitle(title);
@@ -83,7 +84,7 @@ public class TodoListController {
         }
     }
 
-    @GetMapping("/searchByDate")
+    @GetMapping("/todoList/searchByDate")
     public ResponseEntity<?> searchByDate(@RequestParam LocalDate date) {
         try {
             List<TodoList> todoLists = todoListService.getTodoListByDate(date);
@@ -100,7 +101,7 @@ public class TodoListController {
         }
     }
 
-    @GetMapping("/searchByCodigo")
+    @GetMapping("/todoList/searchByCodigo")
     public ResponseEntity<?> searchByCodigo(@RequestParam Long codigo) {
         try {
             TodoList todoList = todoListService.getTodoListByCodigo(codigo);
@@ -117,7 +118,7 @@ public class TodoListController {
         }
     }
 
-    @PutMapping("/complete/{id}")
+    @PutMapping("/todoList/complete/{id}")
     public ResponseEntity<?> completeTodoList(@PathVariable Long id) {
         try {
             TodoList todoList = todoListService.listCompleted(id);
