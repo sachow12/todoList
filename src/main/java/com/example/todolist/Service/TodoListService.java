@@ -25,6 +25,8 @@ public class TodoListService {
                 .max()
                 .orElse(0L);
         todolist.setCodigo(maxCodigo + 1);
+        todolist.setAtivacao(true);
+        todolist.setStatus(false);
         return todoListRepository.save(todolist);
     }
 
